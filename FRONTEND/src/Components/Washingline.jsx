@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom"; 
 import railwayWashing from "../assets/Washingline.jpeg";
-import "./WashingLine.css";
+import "./Washingline.css";
 
 const WashingLine = () => {
   const navigate = useNavigate(); 
