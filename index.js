@@ -11,7 +11,6 @@ const PORT = 8080;
 
 const allowedOrigins = ["http://localhost:3000", "http://localhost:5173"];
 
-
 app.use((req, res, next) => {
   const origin = req.headers.origin;
   if (allowedOrigins.includes(origin)) {
@@ -23,9 +22,6 @@ app.use((req, res, next) => {
 });
 
 app.use(express.json());
-
-// const mapURL = "mongodb://127.0.0.1:27017/map";
-// const contactURL = "mongodb://127.0.0.1:27017/contacts";
 
 const depotsURL = process.env.DEPOTS_ATLAS_URL;
 const contactsURL = process.env.CONTACTS_ATLAS_URL;
@@ -42,7 +38,6 @@ const contactsConnection = mongoose.createConnection(contactsURL, {
 
 mapConnection.on("connected", () => {
   console.log(" Connected to map database");
-  // Call insertSampleData AFTER connection is established
   insertSampleData();
 });
 
@@ -51,15 +46,12 @@ contactsConnection.on("connected", () => console.log("Connected to contacts data
 mapConnection.on("error", (error) => console.error("Map DB connection error:", error));
 contactsConnection.on("error", (error) => console.error("Contacts DB connection error:", error));
 
-
 const DepotModel = mapConnection.model("Depot", Depot.schema);
 const ContactModel = contactsConnection.model("Contact", Contact.schema);
-
 
 const insertSampleData = async () => {
   try {
     const existingData = await DepotModel.countDocuments();
-    
     if (existingData === 0) {
       console.log("⚡ Inserting sample data...");
       await DepotModel.insertMany(sampleData);   
@@ -71,9 +63,6 @@ const insertSampleData = async () => {
     console.error("Error inserting sample data:", error);
   }
 };
-app.get('/', (req, res) => {
-  res.send('🚂 Train Depot API is running successfully!');
-});
 
 app.get("/api/depots", async (req, res) => {
   try {
@@ -96,7 +85,6 @@ app.get("/api/depots/:id", async (req, res) => {
     res.status(500).json({ message: "Failed to fetch depot details", error });
   }
 });
-
 
 app.post("/api/contact", async (req, res) => {
   try {
@@ -124,6 +112,10 @@ app.post("/api/contact", async (req, res) => {
   }
 });
 
+// ✅ Root route added to fix "Cannot GET /" error
+app.get("/", (req, res) => {
+  res.send("🚉 Train Depots API is live!");
+});
 
 app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
