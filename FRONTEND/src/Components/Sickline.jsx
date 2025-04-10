@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import railwaySick from "../assets/sickline1.jpeg"; 
-import "./SickLine.css";
+import "./Sickline.css";
 
 const SickLine = () => {
   return (
