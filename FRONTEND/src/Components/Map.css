@@ -1,0 +1,52 @@
+
+.map-wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+  margin-top:70px;
+}
+
+
+.dropdown-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #f8f9fa;  
+  padding: 15px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+}
+
+.dropdown {
+  width: 250px;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  outline: none;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.dropdown:hover {
+  border-color: #007bff;
+  background: #e9ecef;
+}
+
+.map-container {
+  flex-grow: 1; /* Allow map to take remaining space */
+  height: 100%;
+  width: 100%;
+}
+
+/* Hover image styling */
+.hover-image {
+  width: 150px;
+  height: 150px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  transition: opacity 0.3s;
+  pointer-events: none;
+  z-index: 1000;
+}
