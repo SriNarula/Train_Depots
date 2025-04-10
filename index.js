@@ -71,7 +71,9 @@ const insertSampleData = async () => {
     console.error("Error inserting sample data:", error);
   }
 };
-
+app.get('/', (req, res) => {
+  res.send('🚂 Train Depot API is running successfully!');
+});
 
 app.get("/api/depots", async (req, res) => {
   try {
