@@ -38,7 +38,7 @@ const Map = () => {
     const fetchDepots = async () => {
       try {
         // ✅ Add credentials: 'include' and verify the backend URL is loaded
-        const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/depots`, {
+        const res = await fetch(`${import.process.env.VITE_BACKEND_URL}/api/depots`, {
           method: 'GET',
           credentials: 'include'
         });
