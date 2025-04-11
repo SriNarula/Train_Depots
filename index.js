@@ -10,51 +10,61 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 8080;
 
-// Define allowed frontend URLs
+// Allowed origins
 const allowedOrigins = [
   "http://localhost:5173",
   "http://localhost:3000",
   "https://train-depots-frontend.onrender.com"
 ];
 
-// CORS configuration
-const corsOptions = {
+// ✅ 1. Add manual header middleware BEFORE cors()
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+  if (allowedOrigins.includes(origin)) {
+    res.setHeader("Access-Control-Allow-Origin", origin);
+  }
+  res.setHeader("Access-Control-Allow-Credentials", "true");
+  res.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
+
+// ✅ 2. CORS config middleware
+app.use(cors({
   origin: function (origin, callback) {
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
-      callback(new Error("Not allowed by CORS"));
+      console.error("🚫 Blocked by CORS:", origin);
+      callback(new Error("❌ Not allowed by CORS"));
     }
   },
   credentials: true,
-  optionsSuccessStatus: 200
-};
+  optionsSuccessStatus: 200,
+}));
 
-// Apply CORS middleware
-app.use(cors(corsOptions));
+// ✅ 3. Handle preflight OPTIONS
+app.options("*", cors());
 
-// Handle preflight requests
-app.options("*", cors(corsOptions));
-
-// Other middlewares
+// ✅ 4. Other middlewares
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// Routes
+// ✅ 5. Routes
 app.use("/api/depots", depotRoutes);
 
-// MongoDB Connection
+// ✅ 6. MongoDB Connection
 mongoose
   .connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true
   })
   .then(() => {
-    console.log("Connected to MongoDB");
+    console.log("✅ Connected to MongoDB");
     app.listen(PORT, () => {
-      console.log(`Server running on port ${PORT}`);
+      console.log(`🚀 Server running on port ${PORT}`);
     });
   })
   .catch((error) => {
-    console.error("MongoDB connection error:", error.message);
+    console.error("❌ MongoDB connection error:", error.message);
   });
