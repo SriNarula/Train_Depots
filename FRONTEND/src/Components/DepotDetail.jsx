@@ -12,10 +12,10 @@ const DepotDetail = () => {
   useEffect(() => {
     const fetchDepotDetails = async () => {
       try {
-        const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/depots/${id}`);
+        const res = await fetch(http://localhost:8080/api/depots/${id});
 
         if (!res.ok) {
-          throw new Error(`Error: ${res.status}`);
+          throw new Error('Error: ${res.status}');
         }
 
         const data = await res.json();
@@ -41,6 +41,7 @@ const DepotDetail = () => {
   if (error) return <p>Error: {error}</p>;
   if (!depot) return <p>No depot found.</p>;
 
+  // Check if washing line has meaningful data
   const showWashingLine =
     depot?.washingLine &&
     ((depot.washingLine.capacity && depot.washingLine.capacity !== 0) ||
@@ -49,6 +50,7 @@ const DepotDetail = () => {
       (Array.isArray(depot.washingLine.features) &&
         depot.washingLine.features.length > 0));
 
+  // Check if sick line has meaningful data
   const showSickLine =
     depot?.sickLine &&
     ((depot.sickLine.capacity && depot.sickLine.capacity !== 0) ||
