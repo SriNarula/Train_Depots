@@ -37,7 +37,6 @@ const Map = () => {
 
     const fetchDepots = async () => {
       try {
-        // ✅ Add credentials: 'include' and verify the backend URL is loaded
         const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/depots`, {
           method: 'GET',
           credentials: 'include'
@@ -76,6 +75,9 @@ const Map = () => {
   if (loading) return <p>Loading map...</p>;
   if (error) return <p>Error: {error}</p>;
 
+  console.log("Depots:", depots);
+  console.log("Selected Depot:", selectedDepot);
+
   return (
     <div className="map-wrapper">
       <div className="dropdown-container">
@@ -89,7 +91,8 @@ const Map = () => {
         </select>
       </div>
 
-      <div className="map-container">
+      {/* 🔥 Added inline style for height fix */}
+      <div className="map-container" style={{ height: '500px', width: '100%' }}>
         <MapContainer
           center={
             selectedDepot
