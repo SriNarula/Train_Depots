@@ -33,6 +33,8 @@ const Map = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    console.log("VITE_BACKEND_URL =>", import.meta.env.VITE_BACKEND_URL);
+
     const fetchDepots = async () => {
       try {
         // ✅ Add credentials: 'include' and verify the backend URL is loaded
