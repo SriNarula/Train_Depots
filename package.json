@@ -2,14 +2,15 @@
   "name": "map",
   "version": "1.0.0",
   "main": "index.js",
+  "description": "Train Depot Map Application",
+  "author": "Your Name",
+  "license": "ISC",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview --host --port=${PORT}"
+    "preview": "vite preview --host --port $PORT",
+    "start": "node index.js"
   },
-  "author": "",
-  "license": "ISC",
-  "description": "",
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
@@ -20,5 +21,8 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-leaflet": "^5.0.0"
+  },
+  "devDependencies": {
+    "vite": "^5.0.0"
   }
 }
