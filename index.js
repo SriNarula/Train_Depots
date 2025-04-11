@@ -20,18 +20,22 @@ const allowedOrigins = [
 // ✅ CORS configuration
 const corsOptions = {
   origin: function (origin, callback) {
-    // Allow requests with no origin (like mobile apps or curl) and from allowed origins
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
-      console.error("Blocked by CORS:", origin); // helpful debug log
+      console.error("Blocked by CORS:", origin);
       callback(new Error("Not allowed by CORS"));
     }
   },
   credentials: true,
+  optionsSuccessStatus: 200, // some legacy browsers choke on 204
 };
 
 app.use(cors(corsOptions));
+
+// ✅ Allow preflight requests (important for some browsers)
+app.options("*", cors(corsOptions));
+
 app.use(bodyParser.json());
 
 // ✅ Route setup
