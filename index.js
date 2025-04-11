@@ -20,36 +20,39 @@ const allowedOrigins = [
 // ✅ Recommended CORS setup for Render
 const corsOptions = {
   origin: function (origin, callback) {
-    // allow requests with no origin (like Postman) or if origin is in the allowed list
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
       console.error("🚫 Blocked by CORS:", origin);
-      callback(new Error("Not allowed by CORS"));
+      callback(new Error("❌ Not allowed by CORS"));
     }
   },
   credentials: true,
   optionsSuccessStatus: 200
 };
 
-// ✅ Apply CORS middleware BEFORE any routes or bodyParser
-app.use(cors(corsOptions));
-app.options("*", cors(corsOptions)); // enable preflight across all routes
+// ✅ Middlewares
+app.use(cors(corsOptions)); // CORS must be applied before routes
+app.use(express.json()); // instead of body-parser (recommended in recent Express versions)
 
-app.use(bodyParser.json());
+// Optional: still support body-parser if needed
+app.use(bodyParser.urlencoded({ extended: true }));
 
 // ✅ Routes
 app.use("/api/depots", depotRoutes);
 
-// ✅ MongoDB connection
-mongoose.connect(process.env.MONGO_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-}).then(() => {
-  console.log("Connected to MongoDB ✅");
-  app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT} 🚀`);
+// ✅ MongoDB Connection
+mongoose
+  .connect(process.env.MONGO_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+  })
+  .then(() => {
+    console.log("✅ Connected to MongoDB");
+    app.listen(PORT, () => {
+      console.log(`🚀 Server running on port ${PORT}`);
+    });
+  })
+  .catch((error) => {
+    console.error("❌ MongoDB connection error:", error.message);
   });
-}).catch((error) => {
-  console.error("Error connecting to MongoDB:", error.message);
-});
