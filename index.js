@@ -17,7 +17,7 @@ const allowedOrigins = [
   "https://train-depots-frontend.onrender.com"
 ];
 
-// ✅ Recommended CORS setup for Render
+// ✅ CORS configuration with preflight support
 const corsOptions = {
   origin: function (origin, callback) {
     if (!origin || allowedOrigins.includes(origin)) {
@@ -31,11 +31,12 @@ const corsOptions = {
   optionsSuccessStatus: 200
 };
 
-// ✅ Middlewares
-app.use(cors(corsOptions)); // CORS must be applied before routes
-app.use(express.json()); // instead of body-parser (recommended in recent Express versions)
+// ✅ CORS Middleware Setup (including preflight support)
+app.options("*", cors(corsOptions));  // <--- Handles preflight
+app.use(cors(corsOptions));           // <--- Apply to all requests
 
-// Optional: still support body-parser if needed
+// ✅ Other Middlewares
+app.use(express.json()); // Better than using body-parser for JSON
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // ✅ Routes
