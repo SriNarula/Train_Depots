@@ -35,7 +35,7 @@ const Map = () => {
   useEffect(() => {
     const fetchDepots = async () => {
       try {
-        const res = await fetch('http://localhost:8080/api/depots');
+        const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/depots`);
         if (!res.ok) throw new Error(`Failed to fetch: ${res.status}`);
 
         const data = await res.json();
