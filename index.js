@@ -9,8 +9,12 @@ require('dotenv').config();
 const app = express();
 const PORT = 8080;
 
-// ✅ Allowed origins
-const allowedOrigins = ["http://localhost:3000", "http://localhost:5173"];
+// ✅ Allowed origins including deployed frontend
+const allowedOrigins = [
+  "http://localhost:3000",
+  "http://localhost:5173",
+  "https://train-depots-frontend.onrender.com"  // ✅ Added deployed frontend origin
+];
 
 // ✅ Use cors middleware
 app.use(cors({
