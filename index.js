@@ -17,8 +17,20 @@ const allowedOrigins = [
   "https://train-depots-frontend.onrender.com"
 ];
 
-// ✅ CORS configuration with preflight support
-const corsOptions = {
+// ✅ Custom headers middleware — fixes Render's CORS behavior
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+  if (allowedOrigins.includes(origin)) {
+    res.header("Access-Control-Allow-Origin", origin);
+  }
+  res.header("Access-Control-Allow-Credentials", "true");
+  res.header("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
+
+// ✅ CORS configuration
+app.use(cors({
   origin: function (origin, callback) {
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
@@ -29,14 +41,13 @@ const corsOptions = {
   },
   credentials: true,
   optionsSuccessStatus: 200
-};
+}));
 
-// ✅ CORS Middleware Setup (including preflight support)
-app.options("*", cors(corsOptions));  // <--- Handles preflight
-app.use(cors(corsOptions));           // <--- Apply to all requests
+// ✅ Handle OPTIONS requests for preflight
+app.options("*", cors());
 
 // ✅ Other Middlewares
-app.use(express.json()); // Better than using body-parser for JSON
+app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // ✅ Routes
