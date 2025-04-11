@@ -10,23 +10,35 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 8080;
 
-// ✅ Use simple CORS config for reliability
-app.use(cors({
-  origin: "https://train-depots-frontend.onrender.com",
-  credentials: true,
-  optionsSuccessStatus: 200,
-}));
+// ✅ Define allowed frontend URLs (deployed + local dev)
+const allowedOrigins = [
+  "http://localhost:5173",
+  "http://localhost:3000",
+  "https://train-depots-frontend.onrender.com"
+];
 
-// ✅ Preflight requests for all routes (especially POST, PUT, DELETE)
-app.options("*", cors({
-  origin: "https://train-depots-frontend.onrender.com",
+// ✅ Recommended CORS setup for Render
+const corsOptions = {
+  origin: function (origin, callback) {
+    // allow requests with no origin (like Postman) or if origin is in the allowed list
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      console.error("🚫 Blocked by CORS:", origin);
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
   credentials: true,
-  optionsSuccessStatus: 200,
-}));
+  optionsSuccessStatus: 200
+};
+
+// ✅ Apply CORS middleware BEFORE any routes or bodyParser
+app.use(cors(corsOptions));
+app.options("*", cors(corsOptions)); // enable preflight across all routes
 
 app.use(bodyParser.json());
 
-// ✅ Route setup
+// ✅ Routes
 app.use("/api/depots", depotRoutes);
 
 // ✅ MongoDB connection
