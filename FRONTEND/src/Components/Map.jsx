@@ -33,11 +33,11 @@ const Map = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log("VITE_BACKEND_URL =>", import.process.env.VITE_BACKEND_URL);
+    console.log("VITE_BACKEND_URL =>", import.meta.env.VITE_BACKEND_URL);
 
     const fetchDepots = async () => {
       try {
-        const res = await fetch(`${import.process.env.VITE_BACKEND_URL}/api/depots`, {
+        const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/depots`, {
           method: 'GET',
           credentials: 'include'
         });
