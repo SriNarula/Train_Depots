@@ -35,17 +35,23 @@ const Map = () => {
   useEffect(() => {
     const fetchDepots = async () => {
       try {
-        const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/depots`);
+        // ✅ Add credentials: 'include' and verify the backend URL is loaded
+        const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/depots`, {
+          method: 'GET',
+          credentials: 'include'
+        });
+
         if (!res.ok) throw new Error(`Failed to fetch: ${res.status}`);
 
         const data = await res.json();
         console.log("Fetched Data:", data);
 
-        const validDepots = data.filter((depot) =>
-          depot.location && typeof depot.location.lat === "number" && typeof depot.location.lng === "number"
+        const validDepots = data.filter(
+          (depot) =>
+            depot.location &&
+            typeof depot.location.lat === "number" &&
+            typeof depot.location.lng === "number"
         );
-
-        console.log("Valid Depots:", validDepots);
 
         setDepots(validDepots);
         setLoading(false);
@@ -83,13 +89,18 @@ const Map = () => {
 
       <div className="map-container">
         <MapContainer
-          center={selectedDepot ? [selectedDepot.location.lat, selectedDepot.location.lng] : [28.6139, 77.2090]}
+          center={
+            selectedDepot
+              ? [selectedDepot.location.lat, selectedDepot.location.lng]
+              : [28.6139, 77.2090]
+          }
           zoom={12}
           style={{ height: "100%", width: "100%" }}
         >
           <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-
-          {selectedDepot && <MapCenter center={[selectedDepot.location.lat, selectedDepot.location.lng]} />}
+          {selectedDepot && (
+            <MapCenter center={[selectedDepot.location.lat, selectedDepot.location.lng]} />
+          )}
 
           {depots.map((depot) => (
             <Marker
